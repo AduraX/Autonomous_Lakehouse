@@ -1,0 +1,78 @@
+# Default values for lakehouse-ops
+
+replicaCount: 2
+
+image:
+  repository: lakehouse-ops
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# --- API ---
+api:
+  port: 8000
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+# --- Worker ---
+worker:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+# --- Database ---
+database:
+  url: "postgresql+asyncpg://lakehouse:changeme@postgres:5432/lakehouse"
+
+# --- Redis ---
+redis:
+  url: "redis://redis:6379/0"
+
+# --- Platform ---
+platformAdapter: mock
+
+# --- Observability ---
+otel:
+  serviceName: autonomous-lakehouse
+  exporterEndpoint: "http://otel-collector:4317"
+
+# --- Ingress ---
+ingress:
+  enabled: true
+  className: nginx
+  host: lakehouse-ops.example.com
+  tls:
+    enabled: false
+
+# --- Autoscaling ---
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+
+# --- Service Account ---
+serviceAccount:
+  create: true
+  name: lakehouse-ops
+
+# --- Keycloak (optional) ---
+keycloak:
+  url: ""
+  realm: kubeflow
+  clientId: lakehouse-ops
+  clientSecret: ""
+
+# --- Iceberg (optional) ---
+iceberg:
+  catalogUrl: ""
+  warehouse: "s3://iceberg-warehouse"

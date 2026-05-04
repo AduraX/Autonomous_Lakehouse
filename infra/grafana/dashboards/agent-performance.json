@@ -1,0 +1,109 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "lakehouse-agent-performance",
+    "title": "Agent Performance",
+    "tags": ["lakehouse", "agents"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": { "from": "now-6h", "to": "now" },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Actions Proposed (rate/min)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_actions_proposed_total[5m])) by (action_type) * 60",
+            "legendFormat": "{{action_type}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Actions Executed — Success vs Failure",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_actions_executed_total[5m])) by (status) * 60",
+            "legendFormat": "{{status}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Action Execution Duration (p95)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(lakehouse_action_execution_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Retry Attempts",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_action_retries_total[5m])) by (action_type) * 60",
+            "legendFormat": "{{action_type}}"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Adapter Call Latency (p95)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(lakehouse_adapter_call_duration_seconds_bucket[5m]))",
+            "legendFormat": "{{adapter}} / {{method}}"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Adapter Call Errors",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_adapter_calls_total{status='error'}[5m])) by (adapter, method) * 60",
+            "legendFormat": "{{adapter}} / {{method}}"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Data Quality Checks",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_dq_checks_total[5m])) by (check_name, status) * 60",
+            "legendFormat": "{{check_name}} — {{status}}"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Cost Anomalies Detected",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_cost_anomalies_total[5m])) by (anomaly_type, severity) * 60",
+            "legendFormat": "{{anomaly_type}} ({{severity}})"
+          }
+        ]
+      }
+    ]
+  }
+}

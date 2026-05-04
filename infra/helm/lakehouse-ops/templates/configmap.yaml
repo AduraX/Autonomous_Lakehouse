@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  APP_ENV: "production"
+  APP_LOG_LEVEL: "INFO"
+  PLATFORM_ADAPTER: {{ .Values.platformAdapter | quote }}
+  OTEL_SERVICE_NAME: {{ .Values.otel.serviceName | quote }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.otel.exporterEndpoint | quote }}
+  REDIS_URL: {{ .Values.redis.url | quote }}
+  {{- if .Values.keycloak.url }}
+  KEYCLOAK_URL: {{ .Values.keycloak.url | quote }}
+  KEYCLOAK_REALM: {{ .Values.keycloak.realm | quote }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.keycloak.clientId | quote }}
+  {{- end }}
+  {{- if .Values.iceberg.catalogUrl }}
+  ICEBERG_REST_CATALOG_URL: {{ .Values.iceberg.catalogUrl | quote }}
+  ICEBERG_WAREHOUSE: {{ .Values.iceberg.warehouse | quote }}
+  {{- end }}

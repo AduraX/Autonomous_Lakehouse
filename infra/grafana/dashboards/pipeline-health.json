@@ -1,0 +1,106 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "lakehouse-pipeline-health",
+    "title": "Pipeline Health",
+    "tags": ["lakehouse", "pipelines"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": { "from": "now-6h", "to": "now" },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Events Ingested (rate/min)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(rate(lakehouse_events_ingested_total[5m])) by (status) * 60",
+            "legendFormat": "{{status}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "line", "fillOpacity": 20 }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Success vs Failure Rate",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 6, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(lakehouse_events_ingested_total) by (status)",
+            "legendFormat": "{{status}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Events by Platform",
+        "type": "bargauge",
+        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum(lakehouse_events_ingested_total) by (platform)",
+            "legendFormat": "{{platform}}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Pipeline Duration Distribution",
+        "type": "histogram",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "lakehouse_pipeline_duration_seconds_bucket",
+            "legendFormat": "{{pipeline_name}}"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Coordination Duration (p95)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(lakehouse_coordination_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.50, rate(lakehouse_coordination_duration_seconds_bucket[5m]))",
+            "legendFormat": "p50"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Active Coordinations",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "lakehouse_active_coordinations",
+            "legendFormat": "active"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Diagnoses by Category",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 8, "x": 6, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(lakehouse_diagnoses_created_total) by (category)",
+            "legendFormat": "{{category}}"
+          }
+        ]
+      }
+    ]
+  }
+}
