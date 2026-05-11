@@ -556,7 +556,6 @@ All configuration is via environment variables (or `.env` file). See [`.env.exam
 | Document | Description |
 |---|---|
 | **[demo.md](demo.md)** | Hands-on walkthrough — local mock demo + cloud platform demos (ADF, Fabric, Databricks) |
-| **[claude-note.md](claude-note.md)** | Full build history — every phase, decision, command, and test result |
 | **[articles/](articles/)** | 4-part Medium article series on building the platform |
 | **[.env.example](.env.example)** | Complete environment variable reference |
 
